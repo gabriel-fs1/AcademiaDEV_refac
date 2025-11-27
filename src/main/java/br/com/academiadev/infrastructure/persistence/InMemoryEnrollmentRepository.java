@@ -14,7 +14,9 @@ public class InMemoryEnrollmentRepository implements EnrollmentRepository {
 
     @Override
     public void save(Enrollment enrollment) {
-        db.add(enrollment);
+        if (!db.contains(enrollment)) {
+            db.add(enrollment);
+        }
     }
 
     @Override
@@ -31,5 +33,10 @@ public class InMemoryEnrollmentRepository implements EnrollmentRepository {
                     e.getStudent().getEmail().equals(student.getEmail()) &&
                     e.getCourse().getTitle().equals(courseTitle)
                 );
+    }
+
+    @Override
+    public void delete(Enrollment enrollment) {
+        db.remove(enrollment);
     }
 }

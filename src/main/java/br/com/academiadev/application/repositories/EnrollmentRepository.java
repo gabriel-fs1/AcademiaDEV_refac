@@ -8,4 +8,5 @@ public interface EnrollmentRepository {
     void save(Enrollment enrollment);
     List<Enrollment> findByStudent(Student student);
     boolean existsByStudentAndCourse(Student student, String courseTitle);
+    void delete(Enrollment enrollment);
 }

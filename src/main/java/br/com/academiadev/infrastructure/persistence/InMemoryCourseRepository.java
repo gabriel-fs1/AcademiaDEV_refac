@@ -2,6 +2,7 @@ package br.com.academiadev.infrastructure.persistence;
 
 import br.com.academiadev.application.repositories.CourseRepository;
 import br.com.academiadev.domain.entities.Course;
+import br.com.academiadev.domain.enums.CourseStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,13 @@ public class InMemoryCourseRepository implements CourseRepository {
     @Override
     public void save(Course course) {
         db.put(course.getTitle(), course);
+    }
+
+    @Override
+    public Optional<Course> findByDifficulty(CourseStatus difficulty) {
+        return db.values().stream()
+                .filter(c -> c.getStatus() == difficulty)
+                .findFirst();
     }
 
     @Override

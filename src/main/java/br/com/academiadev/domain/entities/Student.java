@@ -43,4 +43,8 @@ public class Student extends User {
     public void setPlan(SubscriptionPlan plan) {
         this.plan = plan;
     }
+
+    public void cancelEnrollment(String courseTitle) {
+        enrollments.removeIf(e -> e.getCourse().getTitle().equalsIgnoreCase(courseTitle));
+    }
 }

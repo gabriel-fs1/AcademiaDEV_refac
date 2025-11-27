@@ -1,4 +1,4 @@
-package br.com.academiadev.application.usecases;
+package br.com.academiadev.application.usecases.student;
 
 import br.com.academiadev.application.repositories.CourseRepository;
 import br.com.academiadev.application.repositories.EnrollmentRepository;
@@ -23,28 +23,27 @@ public class EnrollStudentUseCase {
     }
 
     public void execute(String email, String courseTitle) {
-
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found: " + email));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + email));
 
         if (!(user instanceof Student)) {
-            throw new RuntimeException("Only students can enroll in courses");
+            throw new RuntimeException("Apenas alunos podem se matricular.");
         }
         Student student = (Student) user;
 
         Course course = courseRepository.findByTitle(courseTitle)
-                .orElseThrow(() -> new RuntimeException("Course not found: " + courseTitle));
+                .orElseThrow(() -> new RuntimeException("Curso não encontrado: " + courseTitle));
 
-        boolean enrolled = student.enroll(course);
+        boolean success = student.enroll(course);
 
-        if (!enrolled) {
-            throw new RuntimeException("Student cannot enroll in this course (Check Plan limit or Course status)");
+        if (!success) {
+            throw new RuntimeException("Não foi possível realizar a matrícula. Verifique se você já possui este curso, se ele está ativo ou se atingiu o limite do seu plano.");
         }
 
         Enrollment newEnrollment = student.getAllEnrollments().stream()
                 .filter(e -> e.getCourse().getTitle().equals(course.getTitle()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Enrollment failed internally"));
+                .orElseThrow(() -> new RuntimeException("Erro interno ao recuperar matrícula."));
 
         enrollmentRepository.save(newEnrollment);
     }

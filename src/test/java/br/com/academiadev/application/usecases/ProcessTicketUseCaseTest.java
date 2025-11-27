@@ -1,6 +1,7 @@
 package br.com.academiadev.application.usecases;
 
-import br.com.academiadev.application.repositories.TicketQueue;
+import br.com.academiadev.application.repositories.TicketRepository;
+import br.com.academiadev.application.usecases.admin.ProcessTicketUseCase;
 import br.com.academiadev.domain.entities.Admin;
 import br.com.academiadev.domain.entities.Student;
 import br.com.academiadev.domain.entities.SupportTicket;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.*;
 class ProcessTicketUseCaseTest {
 
     @Mock
-    private TicketQueue ticketQueue;
+    private TicketRepository ticketQueue;
 
     @InjectMocks
     private ProcessTicketUseCase useCase;

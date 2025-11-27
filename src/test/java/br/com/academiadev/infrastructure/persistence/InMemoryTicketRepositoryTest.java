@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryTicketQueueTest {
+class InMemoryTicketRepositoryTest {
 
-    private InMemoryTicketQueue queue;
+    private InMemoryTicketRepository queue;
 
     @BeforeEach
     void setUp() {
-        queue = new InMemoryTicketQueue();
+        queue = new InMemoryTicketRepository();
     }
 
     @Test

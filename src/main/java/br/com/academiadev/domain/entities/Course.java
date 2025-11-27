@@ -6,7 +6,7 @@ import br.com.academiadev.domain.enums.DifficultyLevel;
 public class Course {
     private String title;
     private String description;
-    private String instructorName; 
+    private String instructorName;
     private int durationInHours;
     private DifficultyLevel difficulty;
     private CourseStatus status;
@@ -33,4 +33,6 @@ public class Course {
     public void setStatus(CourseStatus status) {
         this.status = status;
     }
+
+ 
 }

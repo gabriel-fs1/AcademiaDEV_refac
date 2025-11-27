@@ -1,14 +1,14 @@
-package br.com.academiadev.application.usecases;
+package br.com.academiadev.application.usecases.admin;
 
-import br.com.academiadev.application.repositories.TicketQueue;
+import br.com.academiadev.application.repositories.TicketRepository;
 import br.com.academiadev.domain.entities.Admin;
 import br.com.academiadev.domain.entities.SupportTicket;
 
 public class ProcessTicketUseCase {
 
-    private final TicketQueue ticketQueue;
+    private final TicketRepository ticketQueue;
 
-    public ProcessTicketUseCase(TicketQueue ticketQueue) {
+    public ProcessTicketUseCase(TicketRepository ticketQueue) {
         this.ticketQueue = ticketQueue;
     }
 

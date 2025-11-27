@@ -3,6 +3,7 @@ package br.com.academiadev.application.usecases;
 import br.com.academiadev.application.repositories.CourseRepository;
 import br.com.academiadev.application.repositories.EnrollmentRepository;
 import br.com.academiadev.application.repositories.UserRepository;
+import br.com.academiadev.application.usecases.student.EnrollStudentUseCase;
 import br.com.academiadev.domain.entities.BasicPlan;
 import br.com.academiadev.domain.entities.Course;
 import br.com.academiadev.domain.entities.Student;
@@ -36,17 +37,16 @@ class EnrollStudentUseCaseTest {
     private EnrollStudentUseCase useCase;
 
     @Test
-    @DisplayName("Deve matricular aluno com sucesso quando tudo estiver ok")
-    void shouldEnrollStudentSuccessfully() {
-
-        Student student = new Student("Gabriel", "gabriel@email.com", new BasicPlan());
+    @DisplayName("Deve matricular e salvar no repositório de matrículas")
+    void shouldEnrollSuccessfully() {
+        Student student = new Student("Aluno", "aluno@mail.com", new BasicPlan());
         Course course = new Course("Java", "Desc", "Prof", 10, DifficultyLevel.BEGINNER, CourseStatus.ACTIVE);
 
-        when(userRepository.findByEmail("gabriel@email.com")).thenReturn(Optional.of(student));
+        when(userRepository.findByEmail("aluno@mail.com")).thenReturn(Optional.of(student));
         when(courseRepository.findByTitle("Java")).thenReturn(Optional.of(course));
 
-        assertDoesNotThrow(() -> useCase.execute("gabriel@email.com", "Java"));
- 
+        assertDoesNotThrow(() -> useCase.execute("aluno@mail.com", "Java"));
+
         verify(enrollmentRepository, times(1)).save(any());
     }
 

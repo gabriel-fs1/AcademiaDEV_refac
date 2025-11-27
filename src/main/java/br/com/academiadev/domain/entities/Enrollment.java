@@ -15,13 +15,18 @@ public class Enrollment {
         this.student = student;
         this.course = course;
         this.enrollmentDate = LocalDateTime.now();
-        this.progressPercent = 0; 
+        this.progressPercent = 0;
     }
 
     public void updateProgress(int newProgress) {
         if (newProgress < 0 || newProgress > 100) {
-            throw new IllegalArgumentException("Progress must be between 0 and 100");
+            throw new IllegalArgumentException("O progresso deve ser entre 0 e 100.");
         }
+
+        if (newProgress < this.progressPercent) {
+            throw new IllegalArgumentException("O progresso não pode diminuir. Atual: " + this.progressPercent + "%");
+        }
+
         this.progressPercent = newProgress;
     }
 

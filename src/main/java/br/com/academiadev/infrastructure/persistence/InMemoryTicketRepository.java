@@ -1,12 +1,12 @@
 package br.com.academiadev.infrastructure.persistence;
 
-import br.com.academiadev.application.repositories.TicketQueue;
+import br.com.academiadev.application.repositories.TicketRepository;
 import br.com.academiadev.domain.entities.SupportTicket;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class InMemoryTicketQueue implements TicketQueue {
+public class InMemoryTicketRepository implements TicketRepository {
 
     private final Queue<SupportTicket> queue = new ArrayDeque<>();
 

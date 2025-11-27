@@ -3,6 +3,8 @@ package br.com.academiadev.domain;
 import br.com.academiadev.domain.entities.Course;
 import br.com.academiadev.domain.entities.Enrollment;
 import br.com.academiadev.domain.entities.Student;
+import br.com.academiadev.domain.enums.CourseStatus;
+import br.com.academiadev.domain.enums.DifficultyLevel;
 import br.com.academiadev.domain.entities.BasicPlan;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +46,20 @@ class EnrollmentTest {
 
         assertThrows(IllegalArgumentException.class, () -> {
             enrollment.updateProgress(-1);
+        });
+    }
+
+    @Test
+    @DisplayName("Não deve permitir diminuir o progresso")
+    void shouldNotAllowProgressRegression() {
+        Student s = new Student("Gui", "gui@mail.com", new BasicPlan());
+        Course c = new Course("Java", "Desc", "Prof", 10, DifficultyLevel.BEGINNER, CourseStatus.ACTIVE);
+        Enrollment e = new Enrollment(s, c);
+
+        e.updateProgress(50); 
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            e.updateProgress(49);
         });
     }
 }
