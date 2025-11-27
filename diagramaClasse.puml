@@ -1,0 +1,173 @@
+@startuml AcademiaDev_CleanArch_NoPackages
+
+' Configurações visuais
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+
+' --- ENUMS E INTERFACES DE DOMÍNIO ---
+enum DifficultyLevel {
+    BEGINNER
+    INTERMEDIATE
+    ADVANCED
+}
+
+enum CourseStatus {
+    ACTIVE
+    INACTIVE
+}
+
+interface SubscriptionPlan {
+    + canEnroll(activeEnrollments: int) : boolean
+    + getTypeName() : String
+}
+
+class BasicPlan implements SubscriptionPlan {
+    + canEnroll(activeEnrollments: int) : boolean
+}
+
+class PremiumPlan implements SubscriptionPlan {
+    + canEnroll(activeEnrollments: int) : boolean
+}
+
+' --- ENTIDADES DE DOMÍNIO ---
+abstract class User {
+    # name : String
+    # email : String
+    + getEmail() : String
+}
+
+class Admin extends User {
+    + processTicket(ticket: SupportTicket) : void
+}
+
+class Student extends User {
+    - plan : SubscriptionPlan
+    + getPlan() : SubscriptionPlan
+}
+
+class Course {
+    - title : String
+    - description : String
+    - instructorName : String
+    - durationInHours : int
+    - difficulty : DifficultyLevel
+    - status : CourseStatus
+    + isActive() : boolean
+    + getTitle() : String
+}
+
+class Enrollment {
+    - student : Student
+    - course : Course
+    - progressPercent : int
+    - enrollmentDate : LocalDateTime
+    + updateProgress(newProgress: int) : void
+}
+
+class SupportTicket {
+    - title : String
+    - message : String
+    - opener : User
+    - createdAt : LocalDateTime
+}
+
+' --- USE CASES (APPLICATION) ---
+class EnrollStudentUseCase {
+    + execute(studentEmail: String, courseTitle: String) : void
+}
+
+class ManageCourseUseCase {
+    + createCourse(course: Course) : void
+    + toggleStatus(courseTitle: String) : void
+}
+
+class ProcessTicketUseCase {
+    + execute() : SupportTicket
+}
+
+class GenerateReportsUseCase {
+    + getCoursesByDifficulty() : Map
+    + getUniqueInstructors() : Set
+}
+
+' --- REPOSITÓRIOS (INTERFACES - APPLICATION) ---
+interface CourseRepository {
+    + save(course: Course) : void
+    + findByTitle(title: String) : Course
+    + findAll() : List<Course>
+}
+
+interface UserRepository {
+    + save(user: User) : void
+    + findByEmail(email: String) : User
+}
+
+interface EnrollmentRepository {
+    + save(enrollment: Enrollment) : void
+    + findByStudent(student: Student) : List<Enrollment>
+    + countActiveByStudent(student: Student) : int
+}
+
+interface TicketQueue {
+    + add(ticket: SupportTicket) : void
+    + next() : SupportTicket
+    + isEmpty() : boolean
+}
+
+' --- IMPLEMENTAÇÕES E INFRAESTRUTURA ---
+class InMemoryCourseRepository implements CourseRepository {
+    - db : Map<String, Course>
+}
+
+class InMemoryUserRepository implements UserRepository {
+    - db : Map<String, User>
+}
+
+class InMemoryTicketQueue implements TicketQueue {
+    - queue : Queue<SupportTicket>
+}
+
+class GenericCsvExporter {
+    + exportToCsv(data: List<Object>, columns: List<String>) : String
+}
+
+class ConsoleController {
+    + handleUserInput() : void
+}
+
+class ConsoleView {
+    + showMenu() : void
+}
+
+' --- RELACIONAMENTOS ---
+
+' Domain
+Student --> SubscriptionPlan
+Enrollment --> Student
+Enrollment --> Course
+SupportTicket --> User
+Course --> DifficultyLevel
+Course --> CourseStatus
+
+' Application -> Domain
+EnrollStudentUseCase --> Student : uses
+EnrollStudentUseCase --> Course : uses
+EnrollStudentUseCase ..> Enrollment : creates
+ManageCourseUseCase --> Course : uses
+ProcessTicketUseCase --> SupportTicket : returns
+
+' Application -> Interfaces (IoC)
+EnrollStudentUseCase --> UserRepository : uses
+EnrollStudentUseCase --> CourseRepository : uses
+EnrollStudentUseCase --> EnrollmentRepository : uses
+ManageCourseUseCase --> CourseRepository : uses
+ProcessTicketUseCase --> TicketQueue : uses
+
+' Infrastructure -> Application
+ConsoleController --> EnrollStudentUseCase : calls
+ConsoleController --> ManageCourseUseCase : calls
+ConsoleController --> ProcessTicketUseCase : calls
+ConsoleController --> GenericCsvExporter : uses
+ConsoleController --> ConsoleView : uses
+
+@enduml
